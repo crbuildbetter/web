@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>buildbetter — Software, AI &amp; Certification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --ink:#191A23;
+  --paper:#ffffff;
+  --tint:#F4F2FB;
+  --muted:#5b5c66;
+  --line:#191A23;
+  --accent:#C7B6FE;
+  --accent-2:#7C5CFC;
+  --grad:linear-gradient(135deg,#2E6BFF 0%,#7C3AED 52%,#D946EF 100%);
+  --radius:36px;
+  --radius-sm:18px;
+  --shadow:0 6px 0 0 var(--ink);
+  --maxw:1240px;
+}
+/* accent variants (tweakable) */
+[data-accent="lime"]{ --accent:#C9F66B; --accent-2:#6fae00; --grad:linear-gradient(135deg,#9be814 0%,#3fb24a 100%); }
+[data-accent="blue"]{ --accent:#A9D3FF; --accent-2:#1f6fe0; --grad:linear-gradient(135deg,#2E6BFF 0%,#22b8e6 100%); }
+[data-accent="orange"]{ --accent:#FFD0A1; --accent-2:#e06a16; --grad:linear-gradient(135deg,#ff8a3d 0%,#ff4d6d 100%); }
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:"Space Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  font-size:18px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-weight:600;line-height:1.04;letter-spacing:-0.02em;}
+p{margin:0;}
+a{color:inherit;text-decoration:none;}
+img{display:block;max-width:100%;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 40px;}
+.mono{font-family:"Space Mono",monospace;}
+
+/* highlight pill */
+.hl{background:var(--accent);border-radius:8px;padding:0 .18em;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
+
+/* buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:.6em;
+  font-size:18px;font-weight:500;cursor:pointer;
+  padding:18px 32px;border-radius:14px;border:1px solid var(--ink);
+  background:var(--ink);color:#fff;transition:.18s ease;white-space:nowrap;
+}
+.btn:hover{background:var(--accent-2);border-color:var(--accent-2);}
+.btn.ghost{background:transparent;color:var(--ink);}
+.btn.ghost:hover{background:var(--ink);color:#fff;}
+.btn.accent{background:var(--accent);color:var(--ink);border-color:var(--accent);}
+.btn.accent:hover{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* star */
+.star{width:1em;height:1em;display:inline-block;flex:none;}
+.star path{fill:currentColor;}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:50;background:var(--paper);}
+.nav{display:flex;align-items:center;justify-content:space-between;height:96px;}
+.brand{display:flex;align-items:center;gap:12px;}
+.brand img{width:42px;height:42px;border-radius:11px;}
+.brand .name{font-size:25px;font-weight:700;letter-spacing:-0.03em;}
+.nav-links{display:flex;align-items:center;gap:38px;list-style:none;margin:0;padding:0;}
+.nav-links a{font-size:18px;}
+.nav-links a:hover{color:var(--accent-2);}
+.nav-cta{display:flex;align-items:center;gap:14px;}
+.menu-btn{display:none;background:none;border:1px solid var(--ink);border-radius:10px;width:46px;height:46px;cursor:pointer;align-items:center;justify-content:center;}
+.menu-btn span{display:block;width:20px;height:2px;background:var(--ink);position:relative;}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0;width:20px;height:2px;background:var(--ink);}
+.menu-btn span::before{top:-6px;}.menu-btn span::after{top:6px;}
+
+/* ---------- section header ---------- */
+section{padding:70px 0;}
+.sec-head{display:flex;align-items:center;gap:40px;margin-bottom:54px;flex-wrap:wrap;}
+.sec-head h2{font-size:40px;}
+.sec-head .tag{background:var(--accent);border-radius:8px;padding:2px 8px;font-size:40px;font-weight:600;}
+.sec-head p{max-width:560px;color:var(--ink);font-size:18px;}
+
+/* ---------- hero ---------- */
+.hero{padding-top:36px;padding-bottom:64px;}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;}
+.hero h1{font-size:60px;letter-spacing:-0.03em;}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;}
+body.solid-head .hero h1 .grad{background:none;-webkit-text-fill-color:currentColor;color:var(--accent-2);}
+.hero p.lede{margin:34px 0 40px;font-size:20px;max-width:480px;color:var(--ink);}
+.hero .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+.hero-visual{position:relative;aspect-ratio:1/.92;background:#0e0f16;border-radius:var(--radius);overflow:hidden;border:1px solid var(--ink);box-shadow:var(--shadow);}
+.hero-visual .glow{position:absolute;inset:0;background:radial-gradient(120% 90% at 70% 30%, rgba(124,92,252,.55), transparent 60%),radial-gradient(120% 110% at 20% 90%, rgba(217,70,239,.35), transparent 55%);}
+.hero-visual .markimg{position:absolute;width:62%;left:50%;top:48%;transform:translate(-50%,-50%);mix-blend-mode:screen;filter:drop-shadow(0 0 30px rgba(124,92,252,.45));}
+.hero-visual .chip{position:absolute;background:#fff;color:var(--ink);border-radius:12px;padding:12px 16px;font-size:14px;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.35);display:flex;align-items:center;gap:9px;}
+.hero-visual .chip .dot{width:9px;height:9px;border-radius:50%;background:var(--grad);flex:none;}
+.hero-visual .chip.c1{left:24px;top:26px;}
+.hero-visual .chip.c2{right:24px;bottom:30px;}
+.hero-visual .floatstar{position:absolute;color:var(--accent);font-size:30px;right:30px;top:28px;}
+
+/* proof strip */
+.proof{border-top:1px solid #e7e4f2;border-bottom:1px solid #e7e4f2;}
+.proof .wrap{display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between;padding-top:26px;padding-bottom:26px;}
+.proof .item{display:flex;align-items:center;gap:12px;font-size:17px;font-weight:500;}
+.proof .item .star{color:var(--accent-2);font-size:20px;}
+
+/* ---------- services ---------- */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:38px;}
+.card{
+  border:1px solid var(--ink);border-radius:var(--radius);
+  padding:46px;box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:18px;min-height:300px;
+  background:var(--paper);transition:transform .18s ease;
+}
+.card:hover{transform:translateY(-4px);}
+.card.tint{background:var(--accent);}
+.card.dark{background:var(--ink);color:#fff;}
+.card .label{align-self:flex-start;background:var(--accent);color:var(--ink);border-radius:7px;padding:2px 8px;font-size:26px;font-weight:600;line-height:1.18;}
+.card.tint .label{background:#fff;}
+.card.dark .label{background:var(--accent);}
+.card .desc{font-size:17px;color:inherit;opacity:.92;}
+.card.dark .desc{opacity:.8;}
+.card .spacer{flex:1;}
+.card .learn{display:inline-flex;align-items:center;gap:14px;font-size:18px;font-weight:500;cursor:pointer;}
+.card .arrow{width:42px;height:42px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;flex:none;transition:.18s;}
+.card.dark .arrow{background:var(--accent);}
+.card .arrow svg{width:18px;height:18px;}
+.card .arrow svg path{stroke:#fff;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.card.dark .arrow svg path{stroke:var(--ink);}
+.card .learn:hover .arrow{background:var(--accent-2);}
+.card .deco{position:absolute;}
+.card{position:relative;overflow:hidden;}
+.card .blob{position:absolute;right:-30px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:var(--grad);opacity:.16;filter:blur(2px);}
+.card.dark .blob{opacity:.5;}
+.card.tint .blob{opacity:.28;}
+
+/* ---------- CTA banner ---------- */
+.cta-band .wrap{padding-top:0;padding-bottom:0;}
+.band{
+  background:var(--tint);border-radius:var(--radius);
+  display:grid;grid-template-columns:1.1fr .9fr;align-items:center;
+  padding:56px;gap:30px;position:relative;overflow:hidden;
+}
+.band h3{font-size:34px;margin-bottom:24px;}
+.band p{color:var(--ink);margin-bottom:32px;max-width:420px;}
+.band .art{justify-self:end;position:relative;width:100%;height:200px;}
+.band .art .ring{position:absolute;border-radius:50%;border:2px solid var(--accent-2);}
+.band .art .r1{width:200px;height:200px;right:20px;top:0;opacity:.6;}
+.band .art .r2{width:140px;height:140px;right:60px;top:30px;opacity:.4;}
+.band .art .markimg{position:absolute;width:120px;right:60px;top:40px;border-radius:18px;}
+.band .art .bigstar{position:absolute;color:var(--accent);font-size:60px;right:0;bottom:0;}
+
+/* ---------- team ---------- */
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;}
+.member{
+  border:1px solid var(--ink);border-radius:var(--radius-sm);
+  box-shadow:var(--shadow);padding:30px;background:var(--paper);
+  display:flex;flex-direction:column;gap:14px;
+}
+.member .top{display:flex;align-items:flex-end;gap:18px;}
+.ph{
+  width:84px;height:84px;border-radius:50%;flex:none;
+  background:
+    repeating-linear-gradient(45deg,#e9e5f7 0 8px,#f4f1fc 8px 16px);
+  border:1px solid var(--ink);position:relative;overflow:hidden;
+}
+.ph::after{content:"photo";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:11px;color:#9a93b8;}
+.member .lk{margin-left:auto;width:34px;height:34px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;align-self:flex-start;}
+.member .nm{font-size:21px;font-weight:600;}
+.member .m-title{font-size:22px;font-weight:600;letter-spacing:-0.01em;line-height:1.15;}
+.member .role{font-size:15px;color:var(--accent-2);font-weight:500;margin-top:-8px;}
+.member hr{border:none;border-top:1px solid #e0dcef;margin:4px 0;}
+.member .bio{font-size:15px;color:var(--muted);}
+
+/* ---------- contact ---------- */
+.contact-panel{
+  background:var(--tint);border-radius:var(--radius);
+  padding:56px 60px;position:relative;overflow:hidden;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:start;
+}
+.contact-form{max-width:520px;}
+.radios{display:flex;gap:28px;margin-bottom:30px;}
+.radios label{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:17px;}
+.radios input{appearance:none;width:20px;height:20px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;cursor:pointer;}
+.radios input::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent-2);transform:scale(0);transition:.15s;}
+.radios input:checked::after{transform:scale(1);}
+.field{margin-bottom:22px;}
+.field label{display:block;font-size:15px;margin-bottom:8px;font-weight:500;}
+.field input,.field textarea{
+  width:100%;font-family:inherit;font-size:16px;color:var(--ink);
+  background:#fff;border:1px solid var(--ink);border-radius:12px;padding:16px 18px;
+}
+.field input:focus,.field textarea:focus{outline:2px solid var(--accent-2);outline-offset:1px;}
+.field textarea{min-height:120px;resize:vertical;}
+.contact-form .btn{width:100%;justify-content:center;}
+.contact-aside{align-self:center;display:flex;flex-direction:column;gap:18px;padding-top:6px;}
+.contact-aside .row{display:flex;align-items:center;gap:14px;font-size:17px;}
+.contact-aside .row .ic{width:40px;height:40px;border-radius:11px;background:#fff;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;flex:none;}
+.contact-aside .big{margin-top:8px;font-size:22px;font-weight:600;}
+.contact-intro .big{font-size:34px;font-weight:600;letter-spacing:-0.02em;}
+.contact-intro .big{margin-bottom:18px;}
+.contact-intro .contact-sub{color:var(--ink);font-size:18px;max-width:440px;margin-bottom:32px;}
+.contact-panel .cstar{position:absolute;right:46px;top:46px;color:var(--accent);font-size:40px;}
+.formnote{display:none;margin-top:14px;font-size:15px;color:var(--accent-2);font-weight:500;}
+
+/* ---------- footer ---------- */
+footer{margin-top:30px;}
+.foot{background:var(--ink);color:#fff;border-radius:var(--radius) var(--radius) 0 0;padding:56px 60px 40px;}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start;}
+.foot .brand .name{color:#fff;}
+.foot-nav{display:flex;gap:40px;list-style:none;margin:0;padding:0;}
+.foot-nav a{font-size:17px;}
+.foot-nav a:hover{color:var(--accent);text-decoration:underline;}
+.foot-mid{display:block;margin:44px 0 36px;}
+.foot-contact h4{color:var(--accent);font-size:18px;margin-bottom:18px;background:var(--accent);color:var(--ink);display:inline-block;border-radius:6px;padding:2px 8px;}
+.foot-contact p{font-size:16px;margin-bottom:8px;color:#e7e6ee;}
+.subscribe{background:#23242f;border-radius:var(--radius-sm);padding:30px;display:flex;flex-direction:column;gap:16px;}
+.subscribe .ln{display:flex;gap:14px;}
+.subscribe input{flex:1;background:transparent;border:1px solid #4a4b57;border-radius:12px;padding:15px 18px;color:#fff;font-family:inherit;font-size:15px;}
+.subscribe input:focus{outline:none;border-color:var(--accent);}
+.subscribe .btn.accent{padding:15px 26px;}
+.foot-logo{margin-top:10px;}
+.foot-logo img{width:150px;border-radius:14px;}
+.foot-bottom{border-top:1px solid #3a3b46;padding-top:26px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+.foot-bottom .socials{display:flex;gap:12px;}
+.foot-bottom .socials a{width:34px;height:34px;border-radius:50%;background:#fff;color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;}
+.foot-bottom .socials a:hover{background:var(--accent);}
+.foot-bottom p{font-size:15px;color:#cfced8;}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .hero h1{font-size:50px;}
+  .team-grid{grid-template-columns:1fr 1fr;}
+}
+@media (max-width:880px){
+  .wrap{padding:0 24px;}
+  .menu-btn{display:flex;}
+  .nav-links{position:absolute;top:96px;left:0;right:0;background:#fff;flex-direction:column;gap:0;border-top:1px solid #eee;box-shadow:0 20px 30px rgba(0,0,0,.08);display:none;}
+  .nav-links.open{display:flex;}
+  .nav-links li{width:100%;border-bottom:1px solid #f0eef8;}
+  .nav-links a{display:block;padding:18px 24px;}
+  .nav-cta .btn{display:none;}
+  .hero-grid{grid-template-columns:1fr;gap:30px;}
+  .hero h1{font-size:44px;}
+  .cards{grid-template-columns:1fr;}
+  .band,.contact-panel{grid-template-columns:1fr;}
+  .band .art,.contact-panel .cstar{display:none;}
+  .team-grid{grid-template-columns:1fr;}
+  .foot-mid{grid-template-columns:1fr;}
+  .sec-head h2,.sec-head .tag{font-size:34px;}
+}
+@media (max-width:480px){
+  body{font-size:16px;}
+  .hero h1{font-size:36px;}
+  .card{padding:32px;}
+  .foot{padding:40px 26px 30px;}
+  .contact-panel{padding:36px 26px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top" aria-label="buildbetter home">
+      <img src="assets/bb-mark-white.png" alt="buildbetter mark" />
+      <span class="name">buildbetter</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#contact" class="btn ghost">Contact us</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <h1>Build <span class="grad">better</span> software, smarter AI, certified standards.</h1>
+      <p class="lede">We design and ship software and AI for small businesses and enterprises — and guide your team to <strong>ISO/IEC&nbsp;29110</strong> certification, the international standard for software engineering.</p>
+      <div class="cta-row">
+        <a href="#contact" class="btn">Book a free consultation</a>
+        <a href="#services" class="btn ghost">Explore services</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="glow"></div>
+      <img class="markimg" src="assets/bb-mark.png" alt="" />
+      <svg class="star floatstar" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg>
+      <div class="chip c1"><span class="dot"></span> AI &amp; Software Development</div>
+      <div class="chip c2"><span class="dot"></span> ISO/IEC 29110 ready</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROOF STRIP ===== -->
+<div class="proof">
+  <div class="wrap">
+    <div class="item"><svg class="star" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg> Certified ISO/IEC 29110 consultants</div>
+    <div class="item"><svg class="star" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg> AI from prototype to production</div>
+    <div class="item"><svg class="star" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg> Small business to enterprise</div>
+  </div>
+</div>
+
+<!-- ===== SERVICES ===== -->
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Services</span>
+      <p>From the first line of code to formal certification, we cover the full lifecycle of building better software.</p>
+    </div>
+    <div class="cards">
+
+      <article class="card">
+        <span class="label">Custom Software<br/>Development</span>
+        <p class="desc">Web, mobile, and cloud applications built to last — architected for reliability, scale, and maintainability.</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+      <article class="card tint">
+        <span class="label">AI Solutions</span>
+        <p class="desc">Practical machine learning and generative AI integrated into your products and workflows — not science projects.</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+      <article class="card dark">
+        <span class="label">ISO/IEC 29110<br/>Certification</span>
+        <p class="desc">End-to-end consulting to prepare your team for the ISO/IEC 29110 audit — the international standard for very small entities (VSEs).</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+      <article class="card">
+        <span class="label">Process Assessment<br/>&amp; Gap Analysis</span>
+        <p class="desc">Gap analysis and readiness reviews against engineering best practices, so you know exactly what to fix first.</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+      <article class="card tint">
+        <span class="label">Quality Assurance<br/>&amp; Testing</span>
+        <p class="desc">Automated and manual testing pipelines that let you ship with confidence and catch regressions early.</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+      <article class="card dark">
+        <span class="label">Team Augmentation</span>
+        <p class="desc">Senior engineers and AI specialists who plug straight into your team, exactly when and where you need them.</p>
+        <div class="spacer"></div>
+        <a class="learn" href="#contact">Learn more <span class="arrow"><svg viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg></span></a>
+        <div class="blob"></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<section class="cta-band">
+  <div class="wrap">
+    <div class="band">
+      <div class="band-copy">
+        <h3>Let's build something better.</h3>
+        <p>Book a free 30-minute consultation. We'll map out your software, AI, or certification roadmap — no strings attached.</p>
+        <a href="#contact" class="btn">Get in touch</a>
+      </div>
+      <div class="art" aria-hidden="true">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <img class="markimg" src="assets/bb-mark.png" alt="" />
+        <svg class="star bigstar" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TEAM ===== -->
+<section id="team">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Team</span>
+      <p>Engineers, AI specialists, and certified ISO/IEC 29110 consultants who have shipped real products and prepared teams for audit.</p>
+    </div>
+    <div class="team-grid">
+
+      <article class="member">
+        <div class="m-title">Custom Software Development</div>
+        <hr/>
+        <p class="bio">15+ years building software for startups and enterprises — architecture, delivery, and everything in between.</p>
+      </article>
+
+      <article class="member">
+        <div class="m-title">AI &amp; Machine Learning</div>
+        <hr/>
+        <p class="bio">Takes AI from notebook to production — recommendation, vision, and generative systems.</p>
+      </article>
+
+      <article class="member">
+        <div class="m-title">ISO/IEC 29110 Readiness</div>
+        <hr/>
+        <p class="bio">Certified consultants who prepare your team for the ISO/IEC 29110 audit — pragmatic, audit-ready guidance for VSEs.</p>
+      </article>
+
+      <article class="member">
+        <div class="m-title">Software Engineering</div>
+        <hr/>
+        <p class="bio">Full-stack engineers focused on clean code, testing, and developer experience.</p>
+      </article>
+
+      <article class="member">
+        <div class="m-title">Quality Assurance &amp; Testing</div>
+        <hr/>
+        <p class="bio">Builds the automated pipelines and quality gates that keep every release dependable.</p>
+      </article>
+
+      <article class="member">
+        <div class="m-title">Product Design</div>
+        <hr/>
+        <p class="bio">Designs interfaces people actually want to use — from research through polished UI.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="tag">Contact</span>
+      <p>Tell us what you're building. We'll get back to you within one business day.</p>
+    </div>
+    <div class="contact-panel">
+      <svg class="star cstar" viewBox="0 0 24 24"><path d="M12 0c.7 6 5.3 10.6 12 12-6.7 1.4-11.3 6-12 12-.7-6-5.3-10.6-12-12C6.7 10.6 11.3 6 12 0z"/></svg>
+      <div class="contact-intro">
+        <div class="big">Let's talk about your project.</div>
+        <p class="contact-sub">Whether it's software, AI, or ISO/IEC 29110 certification, send us a note and we'll get back to you within one business day.</p>
+        <a class="btn" href="mailto:hello@buildbeetter.cc">Email us</a>
+      </div>
+      <aside class="contact-aside">
+        <div class="row"><span class="ic">@</span> hello@buildbeetter.cc</div>
+        <div class="row"><span class="ic">⌖</span> Remote-first · Worldwide</div>
+        <p style="color:var(--muted);font-size:15px;margin-top:8px;">Mon–Fri, 9am–6pm. We reply to every enquiry — even the small ones.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-top">
+        <a class="brand" href="#top"><img src="assets/bb-mark.png" alt="buildbetter mark" /><span class="name">buildbetter</span></a>
+        <ul class="foot-nav">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-mid">
+        <div class="foot-contact">
+          <h4>Get in touch</h4>
+          <p>hello@buildbeetter.cc</p>
+          <p>Remote-first · Worldwide</p>
+          <div class="foot-logo"><img src="assets/bb-logo-full.png" alt="buildbetter — AI &amp; Software Development" /></div>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <p>© 2026 buildbetter. All rights reserved.</p>
+        <div class="socials">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="GitHub">gh</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Tweaks panel (React island) -->
+<div id="tweaksRoot"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = {
+  "accent": "#C7B6FE",
+  "gradientHead": true,
+  "hardShadow": true,
+  "radius": 36
+};
+const ACCENT_MAP = { "#C7B6FE":"violet", "#C9F66B":"lime", "#A9D3FF":"blue", "#FFD0A1":"orange" };
+function TweaksApp(){
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  React.useEffect(function(){
+    const root = document.documentElement;
+    root.dataset.accent = ACCENT_MAP[t.accent] || "violet";
+    root.style.setProperty("--radius", t.radius + "px");
+    root.style.setProperty("--shadow", t.hardShadow ? "0 6px 0 0 var(--ink)" : "0 16px 38px rgba(25,26,35,.14)");
+    document.body.classList.toggle("solid-head", !t.gradientHead);
+  }, [t]);
+  return (
+    <TweaksPanel>
+      <TweakSection label="Brand" />
+      <TweakColor label="Accent" value={t.accent} options={["#C7B6FE","#C9F66B","#A9D3FF","#FFD0A1"]} onChange={function(v){setTweak("accent", v);}} />
+      <TweakToggle label="Gradient headline" value={t.gradientHead} onChange={function(v){setTweak("gradientHead", v);}} />
+      <TweakSection label="Style" />
+      <TweakToggle label="Hard offset shadows" value={t.hardShadow} onChange={function(v){setTweak("hardShadow", v);}} />
+      <TweakSlider label="Corner radius" value={t.radius} min={12} max={48} step={1} unit="px" onChange={function(v){setTweak("radius", v);}} />
+    </TweaksPanel>
+  );
+}
+ReactDOM.createRoot(document.getElementById("tweaksRoot")).render(<TweaksApp />);
+</script>
+<script>
+  // mobile menu
+  var mb = document.getElementById('menuBtn');
+  var nl = document.getElementById('navLinks');
+  mb.addEventListener('click', function(){ nl.classList.toggle('open'); });
+  nl.addEventListener('click', function(e){ if(e.target.tagName === 'A') nl.classList.remove('open'); });
+</script>
+
+</body>
+</html>
